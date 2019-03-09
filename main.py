@@ -40,7 +40,7 @@ async def help(ctx, *args):
 @client.command(pass_context=True)
 @commands.cooldown(2, 1)
 async def setup(ctx, *args):
-    await setup_server(client, ctx, args)
+    await setup_server(client, config['owner_id'], ctx, args)
 
 
 @client.command(pass_context=True)
