@@ -15,22 +15,22 @@ def embed_help(client, args):
 
     command = 'help'
 
-    help_help = ".help [command] - shows that message or shows help about command\n" \
-                ".e621 [tags] - shows image from e621.net\n" \
-                ".r34 [tags] - shows image from rule34.xxx\n" \
-                ".neko [tag] - show image from nekos.life"
+    help_help = ".help [command] - shows this message or shows help about [command]\n" \
+                ".e621 [tags] - sends image from e621.net\n" \
+                ".r34 [tags] - sends image from rule34.xxx\n" \
+                ".neko [tag] - sends image from nekos.life"
 
-    help_e621 = ".621 [tags] - shows image from e621.net.\n" \
-                "The number of tags should be no more than 5.\n" \
+    help_e621 = ".621 [tags] - sends image from e621.net.\n" \
+                "Number of tags shouldn't be more than 5.\n" \
                 "Tags must be separated by spaces."
 
-    help_r34 = ".r34 [tags] - shows image from rule34.xxx.\n" \
-               "The number of tags should be no more than 5.\n" \
+    help_r34 = ".r34 [tags] - sends image from rule34.xxx.\n" \
+               "Number of tags shouldn't be more than 5.\n" \
                "Tags must be separated by spaces."
 
     help_neko = ".neko [tag] - shows image from nekos.life.\n" \
                 "ONLY 1 TAG!\n" \
-                "Tags: 'tickle', 'classic', 'ngif', 'erofeet', 'meow', 'erok', 'poke', 'les', 'hololewd', 'lewdk'" \
+                "Available tags: 'tickle', 'classic', 'ngif', 'erofeet', 'meow', 'erok', 'poke', 'les', 'hololewd', 'lewdk'" \
                 ", 'keta', 'feetg', 'nsfw_neko_gif', 'eroyuri', 'kiss', '8ball', 'kuni', 'tits', 'pussy_jpg', 'cu" \
                 "m_jpg', 'pussy', 'lewdkemo', 'lizard', 'slap', 'lewd', 'cum', 'cuddle', 'spank', 'smallboobs', '" \
                 "goose', 'Random_hentai_gif', 'avatar', 'fox_girl', 'nsfw_avatar', 'hug', 'gecg', 'boobs', 'pat'," \

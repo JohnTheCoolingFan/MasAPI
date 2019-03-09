@@ -30,7 +30,7 @@ class NekoWrapper:
 
     async def neko_wrap(self, ctx, args):
         if len(args) > 1:
-            error_message = 'The number of the tag should be no more than 1'
+            error_message = 'Number of tags shouldn\'t be more than 1'
             await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'Nekos.life',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
@@ -40,7 +40,7 @@ class NekoWrapper:
             if len(args) == 1:
                 tag = args[0]
             if tag not in n_tags:
-                error_message = 'The tag must be on the list, read .help neko'
+                error_message = 'The tag must be in the list, check .help neko'
                 await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'Nekos.life',
                                         error=error_message,
                                         wrapper_icon=wrapper_icon)
@@ -52,4 +52,3 @@ class NekoWrapper:
                                    collage=False, url_pic=url,
                                    tags=tag,
                                    wrapper_icon=wrapper_icon, color=0x9900AB)
-

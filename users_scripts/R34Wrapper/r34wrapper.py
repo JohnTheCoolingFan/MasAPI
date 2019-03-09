@@ -38,7 +38,7 @@ class Rule34Wrapper:
                 break
 
         if len(args) > 5:
-            error_message = 'The number of the tag should be no more than 5'
+            error_message = 'Number of tags shouldn\'t be more than 5'
             await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'Rule34.xxx',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
