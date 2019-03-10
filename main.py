@@ -82,9 +82,8 @@ if __name__ == "__main__":
                 print('The package ' + package + ' added')
             except Exception as e:
                 if type(e) == discord.errors.ClientException:
-                    print('The package ' + package + ' not added. Check the spelling of the code')
+                    print('The package ' + package + ' is not added. Check the syntax')
                 else:
-                    print('Unknown error adding package ' + package)
+                    print('Unknown error while adding package ' + package)
 
     client.run(config['token'])
-
