@@ -10,7 +10,7 @@ from functions.setup import setup_server
 client = commands.Bot(command_prefix='.')
 client.remove_command('help')
 
-with open('config.json', 'r') as f:
+with open(os.path.abspath('config/config.json'), 'r') as f:
     config = json.load(f)
 
 
