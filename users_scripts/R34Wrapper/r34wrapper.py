@@ -48,17 +48,20 @@ class Rule34Wrapper:
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
         else:
-            embed_tags = ' '.join(args)
-            url_tags = '+'.join(args)
+                embed_tags = ' '.join(args)
+                url_tags = '+'.join(args)
 
-            try:
+            #try:
                 url = 'https://rule34.xxx/index.php?page=dapi&s=post&q=index&limit={}&pid={}&tags={}'
 
                 url_r = requests.get(url.format(limit, 0, url_tags))
 
                 if url_r.status_code == 200:
                     posts = etree_to_dict(etree.fromstring(url_r.content))
-                    pid = randint(0, int(posts['posts']['@count']) // limit - 1) % 100000
+                    if (int(posts['posts']['@count']) // limit) >= 1:
+                        pid = randint(0, (int(posts['posts']['@count']) // limit) - 1) % 100000
+                    else:
+                        pid = 0
                     url_r = requests.get(url.format(limit, pid, url_tags))
                     posts = etree_to_dict(etree.fromstring(url_r.content))
 
@@ -104,6 +107,6 @@ class Rule34Wrapper:
                 else:
                     await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png',
                                                                                            'rb'))
-            except Exception as e:
-                print(e)
-                await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png', 'rb'))
+            #except Exception as e:
+                #print(e)
+                #await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png', 'rb'))

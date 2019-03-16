@@ -9,9 +9,17 @@ from functions.setup import setup_server
 
 client = commands.Bot(command_prefix='.')
 client.remove_command('help')
-
-with open(os.path.abspath('config/config.json'), 'r') as f:
-    config = json.load(f)
+if os.path.exists(os.path.abspath('config/config.json')):
+    with open(os.path.abspath('config/config.json'), 'r') as f:
+        config = json.load(f)
+else:
+    with open(os.path.abspath('config/config.json'), 'w') as f:
+        config = {
+            'token': '',
+            'owner_id': ''
+        }
+        json.dump(config, f)
+    raise Exception('Needs config.json')
 
 
 @client.event
@@ -85,6 +93,8 @@ if __name__ == "__main__":
                     print('The package ' + package + ' not added. Check the spelling of the code')
                 else:
                     print('Unknown error adding package ' + package)
+        else:
+            print('The package ' + package + 'not added because it haven\'t init file')
 
     client.run(config['token'])
 
