@@ -9,7 +9,7 @@ async def setup_server(client, owner_id, ctx, args):
         if server['configured']:
             if len(args) == 0:
                 await client.send_message(discord.Object(id=ctx.message.channel.id),
-                                          'This command makes your server not configured, please use ".setup" again')
+                                          'Server is not configured now, use ".setup" to configure')
                 server['configured'] = False
                 edit_server(ctx.message.server, server)
             else:
@@ -17,13 +17,13 @@ async def setup_server(client, owner_id, ctx, args):
                     server['sfw'] = True
                     if server['favorites']:
                         await client.send_message(discord.Object(id=ctx.message.channel.id),
-                                                  'Your server marked as server without favotites, use ".setup favorite'
-                                                  's" to ~~make america great~~ turns it up again')
+                                                  'Your server marked as server without favorites, use ".setup favorite'
+                                                  's" to ~~make america great~~ turn it on again')
                         server['favorites'] = False
                     else:
                         await client.send_message(discord.Object(id=ctx.message.channel.id),
-                                                  'Your server marked as server with favotites, use ".setup favorites"'
-                                                  'to turns it down')
+                                                  'Your server marked as server with favorites, use ".setup favorites"'
+                                                  'to turns it off')
                         server['favorites'] = True
                     edit_server(ctx.message.server, server)
                 elif args[0] == 'fav_a' and server['favorites']:

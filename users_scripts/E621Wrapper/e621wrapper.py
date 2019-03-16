@@ -38,7 +38,7 @@ class E621Wrapper:
         # here must be limits
 
         if len(args) > 5:
-            error_message = 'The number of the tag should be no more than 5'
+            error_message = 'The number of the tag shouldn\'t be more than 5'
             await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'e621.net',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
@@ -111,6 +111,3 @@ class E621Wrapper:
                 print(e)
                 await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png',
                                                                                             'rb'))
-
-
-
