@@ -1,25 +1,14 @@
 import os
-import json
 import discord
 from discord.ext import commands
 
-from functions.embed_help import embed_help
+from get_config import get_config
 from functions.server import get_server, edit_server, remove_server
 from functions.setup import setup_server
 
 client = commands.Bot(command_prefix='.')
-client.remove_command('help')
-if os.path.exists(os.path.abspath('config/config.json')):
-    with open(os.path.abspath('config/config.json'), 'r') as f:
-        config = json.load(f)
-else:
-    with open(os.path.abspath('config/config.json'), 'w') as f:
-        config = {
-            'token': '',
-            'owner_id': ''
-        }
-        json.dump(config, f)
-    raise Exception('Needs config.json')
+
+config = get_config()
 
 
 @client.event
@@ -32,17 +21,6 @@ async def bye(ctx, *args):
     if ctx.message.author.id == config['owner_id']:
         await client.logout()
         await client.close()
-
-
-@client.command(pass_context=True)
-@commands.cooldown(5, 1)
-async def help(ctx, *args):
-    server = get_server(ctx.message.server)
-    if server['configured']:
-        await client.send_message(discord.Object(id=ctx.message.channel.id), embed=embed_help(client, args))
-    else:
-        await client.send_message(discord.Object(id=ctx.message.channel.id),
-                                  'You need to setup bot, send !setup in nsfw channel')
 
 
 @client.command(pass_context=True)
@@ -87,14 +65,15 @@ if __name__ == "__main__":
         if os.path.isdir(package_path) and os.path.exists(package_init):
             try:
                 client.load_extension("users_scripts." + package + ".init")
+
                 print('The package ' + package + ' added')
             except Exception as e:
                 if type(e) == discord.errors.ClientException:
-                    print('The package ' + package + ' not added. Check the spelling of the code')
+                    print('The package ' + package + ' not added. Check the spelling of the code. Error: ' + str(e))
                 else:
-                    print('Unknown error adding package ' + package)
+                    print('Unknown error adding package ' + package, 'Error:', e)
         else:
-            print('The package ' + package + 'not added because it haven\'t init file')
+            print('The package ' + package + ' not added because it haven\'t init file')
 
     client.run(config['token'])
 

@@ -9,7 +9,7 @@ def reformat_string(s):
     return s
 
 
-async def send_warn_message(client, channel, user, wrapper_name,
+async def send_warn_message(client, destination, user, wrapper_name,
                             error='Just warn',
                             help_link='',
                             wrapper_icon=''):
@@ -21,10 +21,10 @@ async def send_warn_message(client, channel, user, wrapper_name,
     embed.set_footer(text=wrapper_name, icon_url=wrapper_icon)
     embed.add_field(name=r"⚠️  | " + user.name, value=error.format(reformat_string(help_link)))
 
-    await client.send_message(discord.Object(id=channel.id), embed=embed)
+    await client.send_message(destination, embed=embed)
 
 
-async def send_pic_massage(client, channel, user, wrapper_name,
+async def send_pic_massage(client, destination, user, wrapper_name,
                            collage=False, url_pic=None,
                            author='', author_link='', post_id=None,
                            post_link=None, score=None, tags='',
@@ -50,12 +50,12 @@ async def send_pic_massage(client, channel, user, wrapper_name,
 
     if not collage:
         if len(url_pic) == 0:
-            desc += "Sorry, I can't embed/show this, because the post is webm/swf, but you still can view it from link"
+            desc += "Sorry, I can't embed/show this, but you still can view it from link"
         else:
             url_to_say = url_pic[0]
     if collage:
         to_say = '\n'.join(url_pic)
-        await client.send_message(discord.Object(id=channel.id), to_say)
+        await client.send_message(destination, to_say)
 
     embed = discord.Embed(title="About", colour=discord.Colour(color),
                           url=url_to_say,
@@ -66,7 +66,28 @@ async def send_pic_massage(client, channel, user, wrapper_name,
     embed.set_author(name=user.name, icon_url=user.avatar_url)
     embed.set_footer(text=wrapper_name, icon_url=wrapper_icon)
 
-    await client.send_message(discord.Object(id=channel.id), embed=embed)
+    await client.send_message(destination, embed=embed)
+
+
+async def send_help_message(client, destination, user, wrapper_name,
+                            commands=None, docs=None,
+                            embed=None, wrapper_icon=''):
+
+    if docs is None:
+        docs = []
+    if commands is None:
+        commands = []
+    if embed is None:
+        embed = discord.Embed(colour=discord.Colour(0xff8000),
+                              timestamp=datetime.datetime.utcfromtimestamp(int(time.time())))
+
+        embed.set_footer(text=wrapper_name, icon_url=wrapper_icon)
+        embed.add_field(name=r"❓️  | " + user.name, value='Hi there!', inline=False)
+
+        for row in zip(commands, docs):
+            embed.add_field(name=row[0], value=row[1], inline=False)
+
+    await client.send_message(destination, embed=embed)
 
 
 async def send_information_massage():

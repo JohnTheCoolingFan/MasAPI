@@ -1,4 +1,4 @@
-from users_scripts.NekoWrapper.nekowrapper import NekoWrapper
+from .nekowrapper import NekoWrapper
 
 
 def setup(bot):

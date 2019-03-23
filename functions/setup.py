@@ -1,5 +1,5 @@
 import discord
-from functions.server import get_server, edit_server
+from .server import get_server, edit_server
 
 
 async def setup_server(client, owner_id, ctx, args):

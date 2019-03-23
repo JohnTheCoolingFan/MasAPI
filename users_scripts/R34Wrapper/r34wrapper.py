@@ -4,7 +4,7 @@ import requests
 from lxml import etree
 from random import randint
 
-from get_token import get_token
+from get_config import get_config
 from functions.server import get_server
 from functions.get_channel import get_channel
 from functions.xml_to_dict import etree_to_dict
@@ -20,8 +20,18 @@ class Rule34Wrapper:
     @commands.command(pass_context=True)
     @commands.cooldown(3, 1)
     async def r34(self, ctx, *args):
-        server = get_server(ctx.message.server)
-        nsfw = get_channel(get_token(), ctx.message.channel.id)['nsfw']
+        """
+        .r34 [tags] - sends image from rule34.xxx.
+        Number of tags shouldn't be more than 5.
+        Tags must be separated by spaces.
+        """
+        if ctx.message.server is not None:
+            server = get_server(ctx.message.server)
+            nsfw = get_channel(get_config()['token'], ctx.message.channel.id)['nsfw']
+        else:
+            server = {'sfw': False,
+                      'nsfw_channels': []}
+            nsfw = True
         if ((not server['sfw']) and nsfw) or ctx.message.channel.id in server['nsfw_channels']:
             await self.client.send_typing(discord.Object(id=ctx.message.channel.id))
             await self.r34_wrap(ctx, args)
@@ -39,19 +49,21 @@ class Rule34Wrapper:
 
         if len(args) > 5:
             error_message = 'Number of tags shouldn\'t be more than 5'
-            await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'Rule34.xxx',
+            await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
+                                    ctx.message.author, 'Rule34.xxx',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
         elif limit > 5 or limit <= 0:
             error_message = 'The limit must be between 1 and 5'
-            await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'Rule34.xxx',
+            await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
+                                    ctx.message.author, 'Rule34.xxx',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
         else:
-                embed_tags = ' '.join(args)
-                url_tags = '+'.join(args)
+            embed_tags = ' '.join(args)
+            url_tags = '+'.join(args)
 
-            #try:
+            try:
                 url = 'https://rule34.xxx/index.php?page=dapi&s=post&q=index&limit={}&pid={}&tags={}'
 
                 url_r = requests.get(url.format(limit, 0, url_tags))
@@ -75,7 +87,8 @@ class Rule34Wrapper:
                             post_url = ['https://rule34.xxx/index.php?page=post&s=view&id=' + post_id[0]]
                             score = post['@score']
                             tags_url = 'https://rule34.xxx/index.php?page=post&s=list&tags=' + url_tags
-                            await send_pic_massage(self.client, ctx.message.channel, ctx.message.author, 'Rule34.xxx',
+                            await send_pic_massage(self.client, discord.Object(id=ctx.message.channel.id),
+                                                   ctx.message.author, 'Rule34.xxx',
                                                    collage=False, url_pic=picture_url,
                                                    post_id=post_id, post_link=post_url,
                                                    score=score, tags=embed_tags, tags_url=tags_url,
@@ -92,7 +105,8 @@ class Rule34Wrapper:
                                 post_ids.append(post['@id'])
                                 post_urls.append('https://rule34.xxx/index.php?page=post&s=view&id=' + post['@id'])
 
-                            await send_pic_massage(self.client, ctx.message.channel, ctx.message.author, 'Rule34.xxx',
+                            await send_pic_massage(self.client, discord.Object(id=ctx.message.channel.id),
+                                                   ctx.message.author, 'Rule34.xxx',
                                                    collage=True, url_pic=picture_urls,
                                                    post_id=post_ids, post_link=post_urls,
                                                    tags=embed_tags, tags_url=tags_url,
@@ -100,13 +114,15 @@ class Rule34Wrapper:
                     else:
                         tags_url = 'https://rule34.xxx/index.php?page=post&s=list&tags={}'.format(url_tags)
                         error_message = r"¯\_(ツ)_/¯ [Nothing to show]({})"
-                        await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'Rule34.xxx',
+                        await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
+                                                ctx.message.author, 'Rule34.xxx',
                                                 error=error_message,
                                                 help_link=tags_url,
                                                 wrapper_icon=wrapper_icon)
                 else:
                     await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png',
-                                                                                           'rb'))
-            #except Exception as e:
-                #print(e)
-                #await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png', 'rb'))
+                                                                                                'rb'))
+            except Exception as e:
+                print(e)
+                await self.client.send_file(discord.Object(id=ctx.message.channel.id), open('chrome_YLl4Pxeywc.png',
+                                                                                            'rb'))
