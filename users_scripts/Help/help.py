@@ -27,7 +27,7 @@ class Help:
                     docs.append(self.client.commands[name].short_doc)
                 else:
                     docs.append('This commands did not have help')
-            await send_help_message(self.client, discord.Object(id=ctx.message.channel.id), ctx.message.author, 'Help',
+            await send_help_message(self.client, ctx.message.author, ctx.message.author, 'Help',
                                     command, docs, wrapper_icon=self.client.user.avatar_url)
         elif len(args) == 1:
             if args[0] in self.client.commands:
@@ -35,9 +35,9 @@ class Help:
                                       timestamp=datetime.datetime.utcfromtimestamp(int(time.time())))
 
                 embed.set_footer(text='Help', icon_url=self.client.user.avatar_url)
-                embed.add_field(name=r"❓️  | " + ctx.message.author.name, value='Hi there!')
+                embed.add_field(name=r"❓️  | " + ctx.message.author.name, value='Hi there!', inline=False)
 
-                embed.add_field(name=args[0], value=self.client.commands[args[0]].help)
+                embed.add_field(name=args[0], value=self.client.commands[args[0]].help, inline=False)
 
                 await send_help_message(self.client, ctx.message.author, ctx.message.author, 'Help',
                                         embed=embed, wrapper_icon=self.client.user.avatar_url)
