@@ -1,17 +1,14 @@
 import os
-import json
 import discord
 from discord.ext import commands
 
-from functions.embed_help import embed_help
+from get_config import get_config
 from functions.server import get_server, edit_server, remove_server
 from functions.setup import setup_server
 
 client = commands.Bot(command_prefix='.')
-client.remove_command('help')
 
-with open('config.json', 'r') as f:
-    config = json.load(f)
+config = get_config()
 
 
 @client.event
@@ -27,20 +24,9 @@ async def bye(ctx, *args):
 
 
 @client.command(pass_context=True)
-@commands.cooldown(5, 1)
-async def help(ctx, *args):
-    server = get_server(ctx.message.server)
-    if server['configured']:
-        await client.send_message(discord.Object(id=ctx.message.channel.id), embed=embed_help(client, args))
-    else:
-        await client.send_message(discord.Object(id=ctx.message.channel.id),
-                                  'You need to setup bot, send !setup in nsfw channel')
-
-
-@client.command(pass_context=True)
 @commands.cooldown(2, 1)
 async def setup(ctx, *args):
-    await setup_server(client, ctx, args)
+    await setup_server(client, config['owner_id'], ctx, args)
 
 
 @client.command(pass_context=True)
@@ -79,11 +65,15 @@ if __name__ == "__main__":
         if os.path.isdir(package_path) and os.path.exists(package_init):
             try:
                 client.load_extension("users_scripts." + package + ".init")
+
                 print('The package ' + package + ' added')
             except Exception as e:
                 if type(e) == discord.errors.ClientException:
-                    print('The package ' + package + ' is not added. Check the syntax')
+                    print('The package ' + package + ' not added. Check the spelling of the code. Error: ' + str(e))
                 else:
-                    print('Unknown error while adding package ' + package)
+                    print('Unknown error adding package ' + package, 'Error:', e)
+        else:
+            print('The package ' + package + ' not added because it haven\'t init file')
 
     client.run(config['token'])
+

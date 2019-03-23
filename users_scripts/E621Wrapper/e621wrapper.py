@@ -3,7 +3,7 @@ from discord.ext import commands
 import json
 import requests
 
-from get_token import get_token
+from get_config import get_config
 from functions.get_channel import get_channel
 from functions.server import get_server
 from functions.message_maker import send_warn_message, send_pic_massage
@@ -18,8 +18,18 @@ class E621Wrapper:
     @commands.command(pass_context=True)
     @commands.cooldown(3, 1)
     async def e621(self, ctx, *args):
-        server = get_server(ctx.message.server)
-        nsfw = get_channel(get_token(), ctx.message.channel.id)['nsfw']
+        """
+        .621 [tags] - sends image from e621.net.
+        Number of tags shouldn't be more than 5.
+        Tags must be separated by spaces.
+        """
+        if ctx.message.server is not None:
+            server = get_server(ctx.message.server)
+            nsfw = get_channel(get_config()['token'], ctx.message.channel.id)['nsfw']
+        else:
+            server = {'sfw': False,
+                      'nsfw_channels': []}
+            nsfw = True
         if ((not server['sfw']) and nsfw) or ctx.message.channel.id in server['nsfw_channels']:
             await self.client.send_typing(discord.Object(id=ctx.message.channel.id))
             await self.e6_wrap(ctx, args)
@@ -39,12 +49,14 @@ class E621Wrapper:
 
         if len(args) > 5:
             error_message = 'The number of the tag shouldn\'t be more than 5'
-            await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'e621.net',
+            await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
+                                    ctx.message.author, 'e621.net',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
         elif limit > 5 or limit <= 0:
             error_message = 'The limit must be between 1 and 5'
-            await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'e621.net',
+            await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
+                                    ctx.message.author, 'e621.net',
                                     error=error_message,
                                     wrapper_icon=wrapper_icon)
         else:
@@ -75,7 +87,8 @@ class E621Wrapper:
                             artist_url = 'https://e621.net/post/index/1/' + '%20'.join(post['artist'])
                             score = str(post['score'])
                             tags_url = 'https://e621.net/post?tags={}'.format(tags_url)
-                            await send_pic_massage(self.client, ctx.message.channel, ctx.message.author, 'e621.net',
+                            await send_pic_massage(self.client, discord.Object(id=ctx.message.channel.id),
+                                                   ctx.message.author, 'e621.net',
                                                    collage=False, url_pic=picture_url,
                                                    author=artist_name, author_link=artist_url, post_id=post_id,
                                                    post_link=post_url, score=score, tags=embed_tags, tags_url=tags_url,
@@ -92,7 +105,8 @@ class E621Wrapper:
                                 post_ids.append(str(post['id']))
                                 post_urls.append('https://e621.net/post/show/' + str(post['id']))
 
-                            await send_pic_massage(self.client, ctx.message.channel, ctx.message.author, 'e621.net',
+                            await send_pic_massage(self.client, discord.Object(id=ctx.message.channel.id),
+                                                   ctx.message.author, 'e621.net',
                                                    collage=True, url_pic=picture_urls,
                                                    post_id=post_ids, post_link=post_urls,
                                                    tags=embed_tags, tags_url=tags_url,
@@ -100,7 +114,8 @@ class E621Wrapper:
                     else:
                         tags_url = 'https://e621.net/post?tags={}'.format(tags_url)
                         error_message = r"¯\_(ツ)_/¯ [Nothing to show]({})"
-                        await send_warn_message(self.client, ctx.message.channel, ctx.message.author, 'e621.net',
+                        await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
+                                                ctx.message.author, 'e621.net',
                                                 error=error_message,
                                                 help_link=tags_url,
                                                 wrapper_icon=wrapper_icon)

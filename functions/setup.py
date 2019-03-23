@@ -1,11 +1,9 @@
 import discord
-from functions.server import get_server, edit_server
-
-pechenux_id = '209766176996196354'
+from .server import get_server, edit_server
 
 
-async def setup_server(client, ctx, args):
-    if ctx.message.author.id in [get_server(ctx.message.server)['owner_id'], pechenux_id]:
+async def setup_server(client, owner_id, ctx, args):
+    if ctx.message.author.id in [get_server(ctx.message.server)['owner_id'], owner_id]:
         server = get_server(ctx.message.server)
 
         if server['configured']:
