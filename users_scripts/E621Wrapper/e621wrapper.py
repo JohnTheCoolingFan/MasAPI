@@ -48,7 +48,7 @@ class E621Wrapper:
         # here must be limits
 
         if len(args) > 5:
-            error_message = "Number of the tag shouldn't be more than 5"
+            error_message = "Number of tags shouldn't be more than 5"
             await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
                                     ctx.message.author, 'e621.net',
                                     error=error_message,
