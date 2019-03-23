@@ -50,7 +50,7 @@ class NekoWrapper:
 
     async def neko_wrap(self, ctx, args):
         if len(args) > 1:
-            error_message = 'Number of tags shouldn\'t be more than 1'
+            error_message = "Number of tags shouldn't be more than 1"
             await send_warn_message(self.client, discord.Object(id=ctx.message.channel.id),
                                     ctx.message.author, 'Nekos.life',
                                     error=error_message,

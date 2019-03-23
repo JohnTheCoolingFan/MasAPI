@@ -38,7 +38,7 @@ async def save(ctx, *args):
         await client.add_reaction(ctx.message, '✅')
     elif ctx.message.author.id in [get_server(ctx.message.server)['owner_id'], config['owner_id']]:
         await client.send_message(discord.Object(id=ctx.message.channel.id),
-                                  "You didn't need to save your server")
+                                  "You don't need to save your server")
 
 
 @client.event
@@ -73,7 +73,6 @@ if __name__ == "__main__":
                 else:
                     print('Unknown error adding package ' + package, 'Error:', e)
         else:
-            print('The package ' + package + ' not added because it haven\'t init file')
+            print('The package ' + package + " is not added because it doesn't have init file")
 
     client.run(config['token'])
-

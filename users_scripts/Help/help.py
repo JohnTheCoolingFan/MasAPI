@@ -26,7 +26,7 @@ class Help:
                 if self.client.commands[name].short_doc != '':
                     docs.append(self.client.commands[name].short_doc)
                 else:
-                    docs.append('This commands did not have help')
+                    docs.append("This commands doesn't have help")
             await send_help_message(self.client, discord.Object(id=ctx.message.channel.id), ctx.message.author, 'Help',
                                     command, docs, wrapper_icon=self.client.user.avatar_url)
         elif len(args) == 1:
